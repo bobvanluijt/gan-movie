@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Category to download (https://research.google.com/youtube8m/explore.html)
-CATDOWNLOAD="80" # <-- always change in git
-
 #
 # This script should run on startup.
 # Output images are 640x480
@@ -21,6 +18,9 @@ CATDOWNLOAD="80" # <-- always change in git
 #
 # apt-get install unzip csvtool youtube-dl ffmpeg imagemagick
 #
+
+# Category to download (https://research.google.com/youtube8m/explore.html)
+CATDOWNLOAD=$(curl https://raw.githubusercontent.com/bobvanluijt/gan-movie/master/group.download) # <-- always change in git
 
 echo "Download all from category: $CATDOWNLOAD"
 
@@ -55,7 +55,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
             # Download the video
             youtube-dl --quiet --no-warnings --no-continue -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
             # Cut the screencaps
-            ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" -f "mjpeg" "./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}-%03d.png" &>/dev/null
+            ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}-%03d.jpg" &>/dev/null
             # Resize the caps
             mogrify -resize 640x480 ./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}*
             # Done
