@@ -7,6 +7,8 @@ CATDOWNLOAD="80" # <-- always change in git
 # This script should run on startup.
 # Output images are 640x480
 #
+# Add to crontab: `source <(curl -s https://raw.githubusercontent.com/bobvanluijt/gan-movie/master/downloadVideos.sh)`
+#
 # It assumes that;
 # 1. gcsfuse is installed
 # 2. All is in europe-west1-b
@@ -23,7 +25,6 @@ CATDOWNLOAD="80" # <-- always change in git
 echo "Download all from category: $CATDOWNLOAD"
 
 ## Create and mount disk
-cd ~
 mkdir -p gan-project-results
 gcsfuse --implicit-dirs gan-project-results ./gan-project-results &>/dev/null
 
@@ -54,7 +55,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
             # Download the video
             youtube-dl --quiet --no-warnings -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
             # Cut the screencaps
-            ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}-%03d.jpg" &>/dev/null
+            ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" -f "mjpeg" "./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}-%03d.png" &>/dev/null
             # Resize the caps
             mogrify -resize 640x480 ./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}*
             # Done
