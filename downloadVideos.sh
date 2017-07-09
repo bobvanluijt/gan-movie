@@ -53,7 +53,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
             mkdir -p ./gan-project-results/imgs
             mkdir -p ./gan-project-results/imgs/$CATDOWNLOAD
             # Download the video
-            youtube-dl --quiet --no-warnings -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
+            youtube-dl --quiet --no-warnings --no-continue -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
             # Cut the screencaps
             ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" -f "mjpeg" "./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}-%03d.png" &>/dev/null
             # Resize the caps
