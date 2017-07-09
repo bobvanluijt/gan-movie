@@ -3,6 +3,8 @@ Movie based on Youtube dataset and GAN
 
 _Note: this is completely based on Google Cloud platform. The software in this repo is meant to be used as reference. If you want to recreate the project you probably have to make a few changes here and there._
 
+_Note: Always work in europe-west1-b zone._
+
 ## Download and process images
 
 1. `$ sudo su`

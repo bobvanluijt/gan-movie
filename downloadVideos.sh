@@ -35,6 +35,9 @@ wget --quiet https://github.com/bobvanluijt/gan-movie/blob/master/vocabulary.csv
 wget --quiet https://github.com/bobvanluijt/gan-movie/blob/master/youtube-labels.csv.zip?raw=true -O youtube-labels.csv.zip
 unzip youtube-labels.csv.zip &>/dev/null && rm -f youtube-labels.csv.zip && rm -rf __MACOSX/
 
+# shuffle to get random line per machine
+shuf -o youtube-labels.csv youtube-labels.csv
+
 # Random sleep because of multiple machines running
 sleep $[ ( $RANDOM % 100 )  + 1 ]s
 
