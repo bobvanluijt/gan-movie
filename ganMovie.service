@@ -1,0 +1,10 @@
+[Unit]
+Description=gan movie script
+
+[Service]
+WorkingDirectory=/home/[HOMEDIR]
+ExecStart=/home/[HOMEDIR]/downloadVideos.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
