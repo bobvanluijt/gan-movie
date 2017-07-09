@@ -1,20 +1,25 @@
 #!/bin/bash
+
+# Category to download (https://research.google.com/youtube8m/explore.html)
+CATDOWNLOAD="80" # <-- always change in git
+
 #
-# This script should run on startup
+# This script should run on startup.
+# Output images are 640x480
+#
 # It assumes that;
 # 1. gcsfuse is installed
-# 2. All is in europe-west
+# 2. All is in europe-west1-b
 # 3. There is a bucket called: gan-project-results
 # 4. unzip is installed
 # 5. csvtool is installed
 # 6. youtube-dl is installed
 # 7. ffmpeg is installed
+# 8. imagemagick is installed
 #
-# apt-get install unzip csvtool youtube-dl ffmpeg
+# apt-get install unzip csvtool youtube-dl ffmpeg imagemagick
 #
 
-# Category to download (https://research.google.com/youtube8m/explore.html)
-CATDOWNLOAD="80"
 echo "Download all from category: $CATDOWNLOAD"
 
 ## Create and mount disk
@@ -39,24 +44,26 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
         # get the video id
         VIDEOID=$(echo "$line" | csvtool -t ',' col "1" -)
         # Check if the video isn't already being downloaded
-        if [ ! -d "./gan-project-results/vids/$CATDOWNLOAD/$VIDEOID" ]; then
+        if [ ! -f "./gan-project-results/vids/$VIDEOID.mp4" ]; then
+            # touch on the mp4 file so that other machines can find it too
+            touch "./gan-project-results/vids/$VIDEOID.mp4"
             # Make dirs
             mkdir -p ./gan-project-results/vids
             mkdir -p ./gan-project-results/imgs
             mkdir -p ./gan-project-results/imgs/$CATDOWNLOAD
             # Download the video
-            youtube-dl --quiet --no-warnings -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results/vids/$VIDEOID.mp4" "$VIDEOID" &>/dev/null
+            youtube-dl --quiet --no-warnings -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
             # Cut the screencaps
-            ffmpeg -i ./gan-project-results/vids/$VIDEOID.mp4 -vf fps=1/15 -ss 00:00:10 ./gan-project-results/imgs/$CATDOWNLOAD/${VIDEOID}_%03d.jpg &>/dev/null
+            ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}-%03d.jpg" &>/dev/null
             # Resize the caps
-            ### TODO
+            mogrify -resize 640x480 ./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}*
             # Done
             echo "DONE: $VIDEOID"
         fi
     fi
 done < "youtube-labels.csv"
 
-# unmount results
-sudo umount gan-project-results
+echo "DONE DONE, prep for shutdown"
 
-echo "DONE DONE"
+# stop machine
+gcloud compute instances stop $(hostname) --quiet --zone $(echo $(curl "http://metadata.google.internal/computeMetadata/v1/instance/zone" -H "Metadata-Flavor:Google") | csvtool -t '/' col "4" -)
