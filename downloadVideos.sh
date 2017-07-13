@@ -28,7 +28,7 @@ rm -f vocabulary.csv
 rm -f youtube-labels.csv
 wget --quiet https://github.com/bobvanluijt/gan-movie/blob/master/vocabulary.csv?raw=true -O vocabulary.csv
 wget --quiet https://github.com/bobvanluijt/gan-movie/blob/master/youtube-labels.csv.zip?raw=true -O youtube-labels.csv.zip
-wget --quite https://raw.githubusercontent.com/bobvanluijt/gan-movie/master/group.download -O group.download
+wget --quiet https://raw.githubusercontent.com/bobvanluijt/gan-movie/master/group.download -O group.download
 unzip youtube-labels.csv.zip &>/dev/null && rm -f youtube-labels.csv.zip && rm -rf __MACOSX/
 
 # shuffle to get random line per machine
