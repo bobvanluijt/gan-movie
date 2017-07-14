@@ -39,13 +39,13 @@ shuf -o group.download group.download
 sleep $[ ( $RANDOM % 100 )  + 1 ]s
 
 # Loop through the ids in the groups
-while IFS='' read -r line || [[ -n "$CATDOWNLOAD" ]]; do
+while IFS='' read -r line2 || [[ -n "$line2" ]]; do
     # Category to download (https://research.google.com/youtube8m/explore.html)
-    echo "Download all from category: $CATDOWNLOAD"
+    echo "Download all from category: $line2"
     # Get a random ID which is not downloaded yet
     while IFS='' read -r line || [[ -n "$line" ]]; do
         # Check of the line has the wanted command
-        if echo "$line" | grep --quiet ,$CATDOWNLOAD,; then
+        if echo "$line" | grep --quiet ,$line2,; then
             # get the video id
             VIDEOID=$(echo "$line" | csvtool -t ',' col "1" -)
             # Check if the video isn't already being downloaded
@@ -55,13 +55,13 @@ while IFS='' read -r line || [[ -n "$CATDOWNLOAD" ]]; do
                 # Make dirs
                 mkdir -p ./gan-project-results/vids
                 mkdir -p ./gan-project-results/imgs
-                mkdir -p ./gan-project-results/imgs/$CATDOWNLOAD
+                mkdir -p ./gan-project-results/imgs/$line2
                 # Download the video
                 youtube-dl --quiet --no-warnings --no-continue -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
                 # Cut the screencaps
-                ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}-%03d.jpg" &>/dev/null
+                ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results/imgs/${line2}/${VIDEOID}-%03d.jpg" &>/dev/null
                 # Resize the caps
-                mogrify -resize 640x480 ./gan-project-results/imgs/${CATDOWNLOAD}/${VIDEOID}*
+                mogrify -resize 640x480 ./gan-project-results/imgs/${line2}/${VIDEOID}*
                 # Done
                 echo "DONE: $VIDEOID"
             fi
