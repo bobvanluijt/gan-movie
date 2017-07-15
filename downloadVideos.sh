@@ -9,7 +9,7 @@
 # It assumes that;
 # 1. gcsfuse is installed
 # 2. All is in europe-west1-b
-# 3. There is a bucket called: gan-project-results
+# 3. There is a bucket called: gan-project-results002
 # 4. unzip is installed
 # 5. csvtool is installed
 # 6. youtube-dl is installed
@@ -20,8 +20,8 @@
 #
 
 ## Create and mount disk
-mkdir -p gan-project-results
-gcsfuse --implicit-dirs gan-project-results ./gan-project-results &>/dev/null
+mkdir -p gan-project-results002
+gcsfuse --implicit-dirs gan-project-results002 ./gan-project-results002 &>/dev/null
 
 ## Download files from Github
 rm -f vocabulary.csv
@@ -50,19 +50,19 @@ while IFS='' read -r line2 || [[ -n "$line2" ]]; do
             # get the video id
             VIDEOID=$(echo "$line" | csvtool -t ',' col "1" -)
             # Check if the video isn't already being downloaded
-            if [ ! -f "./gan-project-results/vids/$VIDEOID.mp4" ]; then
+            if [ ! -f "./gan-project-results002/vids/$VIDEOID.mp4" ]; then
                 # touch on the mp4 file so that other machines can find it too
-                touch "./gan-project-results/vids/$VIDEOID.mp4"
+                touch "./gan-project-results002/vids/$VIDEOID.mp4"
                 # Make dirs
-                mkdir -p ./gan-project-results/vids
-                mkdir -p ./gan-project-results/imgs
-                mkdir -p ./gan-project-results/imgs/$line2
+                mkdir -p ./gan-project-results002/vids
+                mkdir -p ./gan-project-results002/imgs
+                mkdir -p ./gan-project-results002/imgs/$line2
                 # Download the video
-                youtube-dl --quiet --no-warnings --no-continue -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
+                youtube-dl --quiet --no-warnings --no-continue -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results002/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
                 # Cut the screencaps
-                ffmpeg -nostdin -i "./gan-project-results/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results/imgs/${line2}/${VIDEOID}-%03d.jpg" &>/dev/null
+                ffmpeg -nostdin -i "./gan-project-results002/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results002/imgs/${line2}/${VIDEOID}-%03d.jpg" &>/dev/null
                 # Resize the caps
-                mogrify -resize 640x480 ./gan-project-results/imgs/${line2}/${VIDEOID}*
+                mogrify -resize 640x480 ./gan-project-results002/imgs/${line2}/${VIDEOID}*
                 # Done
                 echo "DONE: $VIDEOID"
             fi
