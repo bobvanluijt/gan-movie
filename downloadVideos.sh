@@ -26,9 +26,10 @@ gcsfuse --implicit-dirs gan-project-results ./gan-project-results &>/dev/null
 ## Download files from Github
 rm -f vocabulary.csv
 rm -f youtube-labels.csv
+rm -f group.download
 wget --quiet https://github.com/bobvanluijt/gan-movie/blob/master/vocabulary.csv?raw=true -O vocabulary.csv
 wget --quiet https://github.com/bobvanluijt/gan-movie/blob/master/youtube-labels.csv.zip?raw=true -O youtube-labels.csv.zip
-wget --quiet https://raw.githubusercontent.com/bobvanluijt/gan-movie/master/group.download -O group.download
+wget --quiet https://github.com/bobvanluijt/gan-movie/blob/master/group.download?raw=true -O group.download
 unzip youtube-labels.csv.zip &>/dev/null && rm -f youtube-labels.csv.zip && rm -rf __MACOSX/
 
 # shuffle to get random line per machine
