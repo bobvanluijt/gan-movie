@@ -51,12 +51,12 @@ while IFS='' read -r line2 || [[ -n "$line2" ]]; do
             VIDEOID=$(echo "$line" | csvtool -t ',' col "1" -)
             # Check if the video isn't already being downloaded
             if [ ! -f "./gan-project-results002/vids/$VIDEOID.mp4" ]; then
-                # touch on the mp4 file so that other machines can find it too
-                touch "./gan-project-results002/vids/$VIDEOID.mp4"
                 # Make dirs
                 mkdir -p ./gan-project-results002/vids
                 mkdir -p ./gan-project-results002/imgs
                 mkdir -p ./gan-project-results002/imgs/$line2
+                # touch on the mp4 file so that other machines can find it too
+                touch "./gan-project-results002/vids/$VIDEOID.mp4"
                 # Download the video
                 youtube-dl --quiet --no-warnings --no-continue -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results002/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
                 # Cut the screencaps
