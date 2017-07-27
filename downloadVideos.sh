@@ -63,7 +63,7 @@ while IFS='' read -r line2 || [[ -n "$line2" ]]; do
                 ffmpeg -nostdin -i "./gan-project-results003/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results003/imgs/${line2}/${VIDEOID}-%03d.jpg" &>/dev/null
                 # Resize the caps
                 mogrify -resize 640x480 ./gan-project-results003/imgs/${line2}/${VIDEOID}*
-                find ./gan-project-results003/imgs/${line2}/${VIDEOID} -type f -name "${VIDEOID}*" -exec convert {} -resize '480x360^' -gravity Center -crop 480x360+0+0 {}.png \; -exec rm {} \;
+                find ./gan-project-results003/imgs/${line2} -type f -name "${VIDEOID}*" -exec convert {} -resize '480x360^' -gravity Center -crop 480x360+0+0 {}.png \; -exec rm {} \;
                 # Empty file to free up space
                 truncate -s 0 ./gan-project-results003/vids/${VIDEOID}.mp4
                 # Done
