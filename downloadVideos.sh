@@ -60,10 +60,10 @@ while IFS='' read -r line2 || [[ -n "$line2" ]]; do
                 # Download the video
                 youtube-dl --quiet --no-warnings --no-continue -f 'bestvideo[ext=mp4]/bestvideo' --merge-output-format mp4 -o "./gan-project-results003/vids/${VIDEOID}.mp4" "${VIDEOID}" &>/dev/null
                 # Cut the screencaps
-                ffmpeg -nostdin -i "./gan-project-results003/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "15" -sseof "-15" "./gan-project-results003/imgs/${line2}/${VIDEOID}-%03d.jpg" &>/dev/null
+                ffmpeg -nostdin -i "./gan-project-results003/vids/${VIDEOID}.mp4" -vf "fps=1/15" -ss "30" -sseof "-30" "./gan-project-results003/imgs/${line2}/${VIDEOID}-%03d.jpg" &>/dev/null
                 # Resize the caps
-                mogrify -resize 640x480 ./gan-project-results003/imgs/${line2}/${VIDEOID}*
-                find ./gan-project-results003/imgs/${line2} -type f -name "${VIDEOID}*" -exec convert {} -resize '480x360^' -gravity Center -crop 480x360+0+0 {}.png \; -exec rm {} \;
+                mogrify -resize 256x192 ./gan-project-results003/imgs/${line2}/${VIDEOID}*
+                find ./gan-project-results003/imgs/${line2} -type f -name "${VIDEOID}*" -exec convert {} -resize '256x192^' -gravity Center -crop 256x192+0+0 {}.png \; -exec rm {} \;
                 # Empty file to free up space
                 truncate -s 0 ./gan-project-results003/vids/${VIDEOID}.mp4
                 # Done
